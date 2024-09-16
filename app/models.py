@@ -1,21 +1,35 @@
 #Contains all the database models (tables) using SQLAlchemy.
 
 from . import db
+import uuid
+
+# auto-generated last 12 digits of uuid4
+def generate_uuid4_last12():
+    return str(uuid.uuid4())[-12:]
 
 class User(db.Model):
     """
     Represents a user in the system.
 
     Attributes:
-        id (int): The unique identifier for the user.
+        id (str): The unique identifier for the user.
         username (str): The user's username (unique).
         password_hash (str): The hashed password for the user.
         role (str): The role of the user ('student' or 'teacher').
     """
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    id = db.Column(db.String(12), primary_key=True, default=generate_uuid4_last12, unique=True, nullable=False)
+    user_name = db.Column(db.String(80), unique=True, nullable=False)
+    first_name = db.Column(db.String(80), nullable=False)
+    last_name = db.Column(db.String(80), nullable=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(10))  # 'student' or 'teacher'
+    last_login = db.Column(db.DateTime, nullable = True)
+    created_at = db.Column(db.DateTime, nullable = False)
+    updated_at =  db.Column(db.DateTime, nullable = True)
+
+    def __repr__(self) -> str:
+        return f"<Username: {self.user_name}>"
 
 class Course(db.Model):
     """
